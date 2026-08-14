@@ -207,7 +207,7 @@
 <body>
 
   <!-- Audio Elements (6 Catchphrases + 1 BGM) -->
-  <audio id="bg-audio" loop><source src="audio/don-theme.mp3" type="audio/mpeg"></audio>
+  <audio id="bg-audio" loop><source src="audio/king-theme.mp3" type="audio/mpeg"></audio>
   <audio id="sound-1" src="audio/line-shuru.mp3"></audio>
   <audio id="sound-2" src="audio/principal.mp3"></audio>
   <audio id="sound-3" src="audio/shahenshah.mp3"></audio>
@@ -217,9 +217,9 @@
 
   <!-- Hero Header -->
   <header>
-    <h1 class="hero-title">Happy Birthday, Boss! 🎬</h1>
-    <p class="hero-subtitle">"Jahan se Papa khade hote hain, celebration wahin se shuru hoti hai!"</p>
-    <button class="bg-music-btn" onclick="toggleBGM()">▶ Play Hero Theme Music</button>
+    <h1 class="hero-title">Happy Birthday, Pandey Ji! 🎬</h1>
+    <p class="hero-subtitle">"Legends don't retire, they take a long nap"</p>
+    <button class="bg-music-btn" onclick="toggleBGM()">▶ Play Hero Theme Music 🦁</button>
   </header>
 
   <!-- Soundboard & GIF Section (6 Boxes) -->
@@ -228,27 +228,27 @@
     <div class="card">
       <div class="sound-grid">
         <button class="sound-btn" onclick="playCatchphrase('sound-1', 'https://media.giphy.com/media/3ofT5PzgI9Ff2V21M4/giphy.gif', 'Jahan se hum khade hote hain, line wahin se shuru hoti hai!')">
-          "Line Wahin Se..."
+          "Jahan Se Hum Khade Hote Hain..."
         </button>
 
         <button class="sound-btn" onclick="playCatchphrase('sound-2', 'https://media.giphy.com/media/l1IY72RgLqvWLipys/giphy.gif', 'Jis school mein tum padhte ho, uss school ka principal main hoon!')">
-          "Uss School Ka Principal..."
+          "Jis School Mein Tum Padhe Ho..."
         </button>
 
         <button class="sound-btn" onclick="playCatchphrase('sound-3', 'https://media.giphy.com/media/xT1R9Z8f7M2nK7tCne/giphy.gif', 'Rishte mein toh hum tumhare baap lagte hain!')">
-          "Rishte Mein Toh Hum..."
+          "Rishte Mein Toh Hum Tumhare Baap Hain..."
         </button>
 
         <button class="sound-btn" onclick="playCatchphrase('sound-4', 'https://media.giphy.com/media/S5E6VIkBAGujjfT0zz/giphy.gif', 'Naam sunke flower samjhe kya? Fire hai main!')">
-          "Flower Samjhe Kya? Fire!"
+          "Arey Guru ji..."
         </button>
 
         <button class="sound-btn" onclick="playCatchphrase('sound-5', 'https://media.giphy.com/media/3o6wrC51G8K3p7lT8I/giphy.gif', 'Ek baar jo maine commitment kar di, uske baad toh main khud ki bhi nahi sunta!')">
-          "Ek Baar Commitment..."
+          "Ek Baar Jo Meine Commitment Kar Di..."
         </button>
 
         <button class="sound-btn" onclick="playCatchphrase('sound-6', 'https://media.giphy.com/media/d1E2VyhFsxawRbe0/giphy.gif', 'Don ko pakadna mushkil hi nahi, namumkin hai!')">
-          "Don Ko Pakadna..."
+          "Oye Paaji Kadhi..."
         </button>
       </div>
 
@@ -263,7 +263,7 @@
 
   <!-- Dynamic Quiz Section (Changes Every Time) -->
   <section>
-    <h2 class="section-title">The "Dad Dialogue" Quiz ❓</h2>
+    <h2 class="section-title">The "Dad's Memorable Moment" Quiz ❓</h2>
     <div class="card">
       <p id="quiz-question" style="font-size: 1.1rem; font-weight: 700;"></p>
       <div id="quiz-options-container" class="quiz-options"></div>
@@ -285,12 +285,12 @@
       const btn = document.querySelector('.bg-music-btn');
       if (!isPlaying) {
         bgAudio.play();
-        btn.innerText = '⏸ Pause Hero Theme Music';
+        btn.innerText = '⏸ Pause Hero Theme Music 🦁';
         isPlaying = true;
         fireConfetti();
       } else {
         bgAudio.pause();
-        btn.innerText = '▶ Pause Hero Theme Music';
+        btn.innerText = '▶ Pause Hero Theme Music 🦁';
         isPlaying = false;
       }
     }
@@ -323,43 +323,43 @@
     // --- DYNAMIC QUIZ DATASET ---
     const quizDataset = [
       {
-        question: "When Dad says: 'Main gusse mein nahi bolta...', what does he mean?",
+        question: "When Dad says: 'Maine gusse mein kahan bola...', what is the standard reply?",
         options: [
-          { text: "A) He is feeling calm and peaceful.", correct: false },
-          { text: "B) 'Mera tone hi authoritative hai, order accept karo!'", correct: true },
-          { text: "C) He forgot what he was saying.", correct: false }
+          { text: "A) Why be so Bhola, when you can have Hajmola.", correct: false },
+          { text: "B) It's not what you said but how you said it.", correct: true },
+          { text: "C) But Eardrum mein 'Nagada Nagada' baja hai Dad", correct: false }
         ]
       },
       {
-        question: "What happens when someone sets the AC temperature to 18°C?",
+        question: "Which of the following statements is the correct one?",
         options: [
-          { text: "A) Dad buys everyone warm blankets.", correct: false },
-          { text: "B) Emergency red alert! Dad changes it back to 24°C in 0.5s.", correct: true },
-          { text: "C) He enjoys the cool breeze.", correct: false }
+          { text: "A) A Macchar🦟 has more hair than Obi.", correct: false },
+          { text: "B) A Murgi's 🐔 teeth are sharper than Chia's brain.", correct: false },
+          { text: "C) Cherry is the Door Slam Champion.", correct: true }
         ]
       },
       {
-        question: "When Dad says: 'Jis school mein tum padhte ho, uss school ka principal main hoon', he is referring to:",
+        question: "When Dad used to take us for tennis, how did he ensure we ate a Balanced Diet?",
         options: [
-          { text: "A) His actual job.", correct: false },
-          { text: "B) His superior life experience & street smarts.", correct: true },
-          { text: "C) An email he received from your school.", correct: false }
+          { text: "A) By looking at recipes in the ipad (RIP).", correct: false },          
+          { text: "B) Feeding us Bhola Juice, Chole Bhature, Ram Ladoo, Momos, Gol Gappe, Samosas,..", correct: true },
+          { text: "C) Grilling the fish found in the Marigold school Naala while we play", correct: false }
         ]
       },
       {
-        question: "Who holds the ultimate authority over the TV Remote?",
+        question: "What is Dad's favourite Hobby?",
         options: [
-          { text: "A) Whichever kid runs fastest.", correct: false },
-          { text: "B) The Wifi router.", correct: false },
-          { text: "C) Dad (It stays permanently near his sofa spot).", correct: true }
+          { text: "A) Cleansing the stomach one deep breath and mirchi chip at a time.", correct: false },
+          { text: "B) Helping humanity by passing information about others to them (gossiping).", correct: false },
+          { text: "C) Both of the options but at the same time.", correct: true }
         ]
       },
       {
-        question: "Dad's definition of 'Resting my eyes' actually means:",
+        question: "How did Dad impress (pattaya) Mom in IIT Roorkee? ",
         options: [
-          { text: "A) Deep 2-hour snoring nap.", correct: true },
-          { text: "B) Testing room lighting.", correct: false },
-          { text: "C) Meditation practice.", correct: false }
+          { text: "A) He does not remember what he did.", correct: true },
+          { text: "B) He praised the 'Scorpion Ego'.", correct: false },
+          { text: "C) He promised her that when they have kids he will be their Ghoda🐴.", correct: false }
         ]
       }
     ];
@@ -397,11 +397,11 @@
       const feedback = document.getElementById('quiz-feedback');
       if (isCorrect) {
         feedback.style.color = '#00ff88';
-        feedback.innerText = '🎯 100% Correct! Dad rules supreme!';
+        feedback.innerText = '🎯 Sahi Jawab! Saat Crore!!!!';
         fireConfetti();
       } else {
         feedback.style.color = '#ff4444';
-        feedback.innerText = '❌ Wrong answer! As Dad says: "Pehle dhyan se suno!"';
+        feedback.innerText = '❌ Dad always says: "Pehle dhyan se suno!". /nWise woreds from a wise Owl';
       }
     }
 
