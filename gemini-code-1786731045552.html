@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dad: The Ultimate Bollywood Hero 🎬</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <style>
+    :root {
+      --primary: #ff0055;
+      --gold: #ffd700;
+      --bg: #0d0d11;
+      --card-bg: #1a1a24;
+      --text: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      text-align: center;
+      padding-bottom: 50px;
+    }
+
+    /* Header & Hero */
+    header {
+      padding: 50px 20px 30px;
+      background: linear-gradient(180deg, #2a0845 0%, var(--bg) 100%);
+    }
+
+    .hero-title {
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--gold);
+      text-transform: uppercase;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+      margin-bottom: 10px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      color: #ccc;
+    }
+
+    /* Music Control Button */
+    .bg-music-btn {
+      margin: 25px auto 10px;
+      padding: 12px 28px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, var(--primary), #ff5500);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 0, 85, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .bg-music-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(255, 0, 85, 0.6);
+    }
+
+    /* Section Styling */
+    section {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      color: var(--gold);
+      margin-bottom: 25px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 60%;
+      height: 3px;
+      background: var(--primary);
+      margin: 8px auto 0;
+      border-radius: 2px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid #2a2a3a;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Soundboard Buttons Grid */
+    .sound-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .sound-btn {
+      background: #252538;
+      border: 2px solid var(--gold);
+      color: white;
+      padding: 15px 10px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sound-btn:hover, .sound-btn.active {
+      background: var(--gold);
+      color: #000;
+      transform: translateY(-3px);
+    }
+
+    /* Dynamic GIF Display Box */
+    .gif-display-card {
+      background: #11111a;
+      border: 2px dashed var(--primary);
+      border-radius: 12px;
+      padding: 20px;
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gif-display-card img {
+      max-width: 100%;
+      max-height: 280px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      display: none;
+    }
+
+    .gif-caption {
+      margin-top: 15px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--gold);
+    }
+
+    /* Quiz Container */
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .quiz-btn {
+      background: #28283d;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      text-align: left;
+    }
+
+    .quiz-btn:hover {
+      background: #3b3b5c;
+    }
+
+    #quiz-feedback {
+      margin-top: 15px;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 60px;
+      color: #888;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Audio elements -->
+  <audio id="bg-audio" loop>
+    <source src="audio/don-theme.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="sound-1" src="audio/line-shuru.mp3"></audio>
+  <audio id="sound-2" src="audio/principal.mp3"></audio>
+  <audio id="sound-3" src="audio/shahenshah.mp3"></audio>
+  <audio id="sound-4" src="audio/fire.mp3"></audio>
+
+  <!-- Hero Header -->
+  <header>
+    <h1 class="hero-title">Happy Birthday, Boss! 🎬</h1>
+    <p class="hero-subtitle">"Jahan se Papa khade hote hain, celebration wahin se shuru hoti hai!"</p>
+    <button class="bg-music-btn" onclick="toggleBGM()">▶ Play Hero Theme Music</button>
+  </header>
+
+  <!-- Soundboard & GIF Section -->
+  <section>
+    <h2 class="section-title">Dad Dialogue & GIF Soundboard 🎙️</h2>
+    <div class="card">
+      <div class="sound-grid">
+        <button class="sound-btn" onclick="playCatchphrase('sound-1', 'https://media.giphy.com/media/3ofT5PzgI9Ff2V21M4/giphy.gif', 'Jahan se hum khade hote hain, line wahin se shuru hoti hai!')">
+          "Line Wahin Se Shuru..."
+        </button>
+
+        <button class="sound-btn" onclick="playCatchphrase('sound-2', 'https://media.giphy.com/media/l1IY72RgLqvWLipys/giphy.gif', 'Jis school mein tum padhte ho, uss school ka principal main hoon!')">
+          "Uss School Ka Principal..."
+        </button>
+
+        <button class="sound-btn" onclick="playCatchphrase('sound-3', 'https://media.giphy.com/media/xT1R9Z8f7M2nK7tCne/giphy.gif', 'Rishte mein toh hum tumhare baap lagte hain!')">
+          "Rishte Mein Toh Hum..."
+        </button>
+
+        <button class="sound-btn" onclick="playCatchphrase('sound-4', 'https://media.giphy.com/media/S5E6VIkBAGujjfT0zz/giphy.gif', 'Naam sunke flower samjhe kya? Fire hai main!')">
+          "Flower Samjhe Kya? Fire!"
+        </button>
+      </div>
+
+      <!-- Dynamic GIF Player -->
+      <div class="gif-display-card">
+        <p id="placeholder-text" style="color: #777;">Click any dialogue button above to play sound & GIF!</p>
+        <img id="active-gif" src="" alt="Dad Catchphrase GIF">
+        <div id="active-caption" class="gif-caption"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Trivia Section -->
+  <section>
+    <h2 class="section-title">The "Dad Dialogue" Quiz ❓</h2>
+    <div class="card">
+      <p style="font-size: 1.1rem; font-weight: 700;">When Dad says: "Main gusse mein nahi bolta...", what does he actually mean?</p>
+      <div class="quiz-options">
+        <button class="quiz-btn" onclick="checkQuiz(this, false)">A) He is very calm and peaceful.</button>
+        <button class="quiz-btn" onclick="checkQuiz(this, true)">B) "Mera tone hi authoritative hai, order accept karo!"</button>
+        <button class="quiz-btn" onclick="checkQuiz(this, false)">C) He forgot what he was saying.</button>
+      </div>
+      <div id="quiz-feedback"></div>
+    </div>
+  </section>
+
+  <footer>
+    Made with ❤️ & Bollywood Swag for the world's best Dad!
+  </footer>
+
+  <script>
+    // Toggle Background Music
+    const bgAudio = document.getElementById('bg-audio');
+    let isPlaying = false;
+
+    function toggleBGM() {
+      const btn = document.querySelector('.bg-music-btn');
+      if (!isPlaying) {
+        bgAudio.play();
+        btn.innerText = '⏸ Pause Hero Theme Music';
+        isPlaying = true;
+        fireConfetti();
+      } else {
+        bgAudio.pause();
+        btn.innerText = '▶ Play Hero Theme Music';
+        isPlaying = false;
+      }
+    }
+
+    // Play Catchphrase Audio + Update GIF Container
+    function playCatchphrase(audioId, gifUrl, captionText) {
+      // Pause all dialogue sounds before playing new one
+      ['sound-1', 'sound-2', 'sound-3', 'sound-4'].forEach(id => {
+        const sound = document.getElementById(id);
+        if (sound) {
+          sound.pause();
+          sound.currentTime = 0;
+        }
+      });
+
+      // Play chosen sound
+      const audio = document.getElementById(audioId);
+      if (audio) {
+        audio.play();
+      }
+
+      // Update GIF display
+      const gifImg = document.getElementById('active-gif');
+      const gifCaption = document.getElementById('active-caption');
+      const placeholder = document.getElementById('placeholder-text');
+
+      placeholder.style.display = 'none';
+      gifImg.src = gifUrl;
+      gifImg.style.display = 'block';
+      gifCaption.innerText = captionText;
+
+      fireConfetti();
+    }
+
+    // Quiz Checking + Confetti Trigger
+    function checkQuiz(btn, isCorrect) {
+      const feedback = document.getElementById('quiz-feedback');
+      if (isCorrect) {
+        feedback.style.color = '#00ff88';
+        feedback.innerText = '🎯 100% Correct! Dad rules the household!';
+        fireConfetti();
+      } else {
+        feedback.style.color = '#ff4444';
+        feedback.innerText = '❌ Wrong answer! As Dad says: "Pehle dhyan se suno!"';
+      }
+    }
+
+    // Confetti Animation Effect
+    function fireConfetti() {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
