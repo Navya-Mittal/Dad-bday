@@ -102,10 +102,10 @@
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
 
-    /* Soundboard Buttons Grid */
+    /* 6 Soundboard Buttons Grid */
     .sound-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
       margin-bottom: 25px;
     }
@@ -122,7 +122,7 @@
       transition: all 0.2s;
     }
 
-    .sound-btn:hover, .sound-btn.active {
+    .sound-btn:hover {
       background: var(--gold);
       color: #000;
       transform: translateY(-3px);
@@ -185,6 +185,17 @@
       font-size: 1.1rem;
     }
 
+    .next-quiz-btn {
+      margin-top: 20px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
     /* Footer */
     footer {
       margin-top: 60px;
@@ -195,14 +206,14 @@
 </head>
 <body>
 
-  <!-- Audio elements -->
-  <audio id="bg-audio" loop>
-    <source src="audio/don-theme.mp3" type="audio/mpeg">
-  </audio>
+  <!-- Audio Elements (6 Catchphrases + 1 BGM) -->
+  <audio id="bg-audio" loop><source src="audio/don-theme.mp3" type="audio/mpeg"></audio>
   <audio id="sound-1" src="audio/line-shuru.mp3"></audio>
   <audio id="sound-2" src="audio/principal.mp3"></audio>
   <audio id="sound-3" src="audio/shahenshah.mp3"></audio>
   <audio id="sound-4" src="audio/fire.mp3"></audio>
+  <audio id="sound-5" src="audio/commitment.mp3"></audio>
+  <audio id="sound-6" src="audio/don-namumkin.mp3"></audio>
 
   <!-- Hero Header -->
   <header>
@@ -211,13 +222,13 @@
     <button class="bg-music-btn" onclick="toggleBGM()">▶ Play Hero Theme Music</button>
   </header>
 
-  <!-- Soundboard & GIF Section -->
+  <!-- Soundboard & GIF Section (6 Boxes) -->
   <section>
-    <h2 class="section-title">Dad Dialogue & GIF Soundboard 🎙️</h2>
+    <h2 class="section-title">Dad Catchphrase Soundboard 🎙️</h2>
     <div class="card">
       <div class="sound-grid">
         <button class="sound-btn" onclick="playCatchphrase('sound-1', 'https://media.giphy.com/media/3ofT5PzgI9Ff2V21M4/giphy.gif', 'Jahan se hum khade hote hain, line wahin se shuru hoti hai!')">
-          "Line Wahin Se Shuru..."
+          "Line Wahin Se..."
         </button>
 
         <button class="sound-btn" onclick="playCatchphrase('sound-2', 'https://media.giphy.com/media/l1IY72RgLqvWLipys/giphy.gif', 'Jis school mein tum padhte ho, uss school ka principal main hoon!')">
@@ -231,6 +242,14 @@
         <button class="sound-btn" onclick="playCatchphrase('sound-4', 'https://media.giphy.com/media/S5E6VIkBAGujjfT0zz/giphy.gif', 'Naam sunke flower samjhe kya? Fire hai main!')">
           "Flower Samjhe Kya? Fire!"
         </button>
+
+        <button class="sound-btn" onclick="playCatchphrase('sound-5', 'https://media.giphy.com/media/3o6wrC51G8K3p7lT8I/giphy.gif', 'Ek baar jo maine commitment kar di, uske baad toh main khud ki bhi nahi sunta!')">
+          "Ek Baar Commitment..."
+        </button>
+
+        <button class="sound-btn" onclick="playCatchphrase('sound-6', 'https://media.giphy.com/media/d1E2VyhFsxawRbe0/giphy.gif', 'Don ko pakadna mushkil hi nahi, namumkin hai!')">
+          "Don Ko Pakadna..."
+        </button>
       </div>
 
       <!-- Dynamic GIF Player -->
@@ -242,17 +261,14 @@
     </div>
   </section>
 
-  <!-- Quick Trivia Section -->
+  <!-- Dynamic Quiz Section (Changes Every Time) -->
   <section>
     <h2 class="section-title">The "Dad Dialogue" Quiz ❓</h2>
     <div class="card">
-      <p style="font-size: 1.1rem; font-weight: 700;">When Dad says: "Main gusse mein nahi bolta...", what does he actually mean?</p>
-      <div class="quiz-options">
-        <button class="quiz-btn" onclick="checkQuiz(this, false)">A) He is very calm and peaceful.</button>
-        <button class="quiz-btn" onclick="checkQuiz(this, true)">B) "Mera tone hi authoritative hai, order accept karo!"</button>
-        <button class="quiz-btn" onclick="checkQuiz(this, false)">C) He forgot what he was saying.</button>
-      </div>
+      <p id="quiz-question" style="font-size: 1.1rem; font-weight: 700;"></p>
+      <div id="quiz-options-container" class="quiz-options"></div>
       <div id="quiz-feedback"></div>
+      <button class="next-quiz-btn" onclick="loadRandomQuestion()">Next Question 🎲</button>
     </div>
   </section>
 
@@ -261,7 +277,7 @@
   </footer>
 
   <script>
-    // Toggle Background Music
+    // --- BGM Logic ---
     const bgAudio = document.getElementById('bg-audio');
     let isPlaying = false;
 
@@ -274,15 +290,14 @@
         fireConfetti();
       } else {
         bgAudio.pause();
-        btn.innerText = '▶ Play Hero Theme Music';
+        btn.innerText = '▶ Pause Hero Theme Music';
         isPlaying = false;
       }
     }
 
-    // Play Catchphrase Audio + Update GIF Container
+    // --- Catchphrase Sound + GIF Logic ---
     function playCatchphrase(audioId, gifUrl, captionText) {
-      // Pause all dialogue sounds before playing new one
-      ['sound-1', 'sound-2', 'sound-3', 'sound-4'].forEach(id => {
+      ['sound-1', 'sound-2', 'sound-3', 'sound-4', 'sound-5', 'sound-6'].forEach(id => {
         const sound = document.getElementById(id);
         if (sound) {
           sound.pause();
@@ -290,13 +305,9 @@
         }
       });
 
-      // Play chosen sound
       const audio = document.getElementById(audioId);
-      if (audio) {
-        audio.play();
-      }
+      if (audio) audio.play();
 
-      // Update GIF display
       const gifImg = document.getElementById('active-gif');
       const gifCaption = document.getElementById('active-caption');
       const placeholder = document.getElementById('placeholder-text');
@@ -309,12 +320,84 @@
       fireConfetti();
     }
 
-    // Quiz Checking + Confetti Trigger
-    function checkQuiz(btn, isCorrect) {
+    // --- DYNAMIC QUIZ DATASET ---
+    const quizDataset = [
+      {
+        question: "When Dad says: 'Main gusse mein nahi bolta...', what does he mean?",
+        options: [
+          { text: "A) He is feeling calm and peaceful.", correct: false },
+          { text: "B) 'Mera tone hi authoritative hai, order accept karo!'", correct: true },
+          { text: "C) He forgot what he was saying.", correct: false }
+        ]
+      },
+      {
+        question: "What happens when someone sets the AC temperature to 18°C?",
+        options: [
+          { text: "A) Dad buys everyone warm blankets.", correct: false },
+          { text: "B) Emergency red alert! Dad changes it back to 24°C in 0.5s.", correct: true },
+          { text: "C) He enjoys the cool breeze.", correct: false }
+        ]
+      },
+      {
+        question: "When Dad says: 'Jis school mein tum padhte ho, uss school ka principal main hoon', he is referring to:",
+        options: [
+          { text: "A) His actual job.", correct: false },
+          { text: "B) His superior life experience & street smarts.", correct: true },
+          { text: "C) An email he received from your school.", correct: false }
+        ]
+      },
+      {
+        question: "Who holds the ultimate authority over the TV Remote?",
+        options: [
+          { text: "A) Whichever kid runs fastest.", correct: false },
+          { text: "B) The Wifi router.", correct: false },
+          { text: "C) Dad (It stays permanently near his sofa spot).", correct: true }
+        ]
+      },
+      {
+        question: "Dad's definition of 'Resting my eyes' actually means:",
+        options: [
+          { text: "A) Deep 2-hour snoring nap.", correct: true },
+          { text: "B) Testing room lighting.", correct: false },
+          { text: "C) Meditation practice.", correct: false }
+        ]
+      }
+    ];
+
+    let currentQuestionIndex = -1;
+
+    function loadRandomQuestion() {
+      const feedback = document.getElementById('quiz-feedback');
+      feedback.innerText = '';
+
+      // Pick a random index different from current one
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * quizDataset.length);
+      } while (newIndex === currentQuestionIndex && quizDataset.length > 1);
+
+      currentQuestionIndex = newIndex;
+      const qData = quizDataset[currentQuestionIndex];
+
+      document.getElementById('quiz-question').innerText = qData.question;
+
+      const container = document.getElementById('quiz-options-container');
+      container.innerHTML = '';
+
+      qData.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-btn';
+        btn.innerText = opt.text;
+        btn.onclick = () => checkQuiz(opt.correct);
+        container.appendChild(btn);
+      });
+    }
+
+    function checkQuiz(isCorrect) {
       const feedback = document.getElementById('quiz-feedback');
       if (isCorrect) {
         feedback.style.color = '#00ff88';
-        feedback.innerText = '🎯 100% Correct! Dad rules the household!';
+        feedback.innerText = '🎯 100% Correct! Dad rules supreme!';
         fireConfetti();
       } else {
         feedback.style.color = '#ff4444';
@@ -322,14 +405,13 @@
       }
     }
 
+    // Initialize first question on load
+    loadRandomQuestion();
+
     // Confetti Animation Effect
     function fireConfetti() {
       if (typeof confetti === 'function') {
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
+        confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
       }
     }
   </script>
