@@ -181,8 +181,13 @@
       text-align: left;
     }
 
-    .quiz-btn:hover {
+    .quiz-btn:hover:not(:disabled) {
       background: #3b3b5c;
+    }
+
+    .quiz-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     #quiz-feedback {
@@ -200,6 +205,27 @@
       border-radius: 8px;
       font-weight: 700;
       cursor: pointer;
+    }
+
+    /* Quiz End Results Styling */
+    .result-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .score-title {
+      font-size: 1.8rem;
+      color: var(--gold);
+      font-weight: 900;
+    }
+
+    .score-gif {
+      max-width: 100%;
+      max-height: 250px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
 
     /* Footer */
@@ -267,14 +293,16 @@
     </div>
   </section>
 
-  <!-- Dynamic Quiz Section (Changes Every Time) -->
+  <!-- Dynamic Quiz Section -->
   <section>
     <h2 class="section-title">The "Dad's Memorable Moment" Quiz </h2>
-    <div class="card">
-      <p id="quiz-question" style="font-size: 1.1rem; font-weight: 700;"></p>
-      <div id="quiz-options-container" class="quiz-options"></div>
-      <div id="quiz-feedback"></div>
-      <button class="next-quiz-btn" onclick="loadNextQuestion()">Next Question 🎲</button>
+    <div class="card" id="quiz-card">
+      <div id="quiz-content">
+        <p id="quiz-question" style="font-size: 1.1rem; font-weight: 700;"></p>
+        <div id="quiz-options-container" class="quiz-options"></div>
+        <div id="quiz-feedback"></div>
+        <button id="next-btn" class="next-quiz-btn" onclick="loadNextQuestion()">Next Question 🎲</button>
+      </div>
     </div>
   </section>
 
@@ -323,7 +351,7 @@
       gifCaption.innerText = captionText;
     }
 
-    // --- DYNAMIC NON-REPEATING QUIZ LOGIC ---
+    // --- DYNAMIC QUIZ LOGIC WITH SCORE & END STATE ---
     const quizDataset = [
       {
         question: "When Dad says: 'Maine gusse mein kahan bola...', what is the standard reply?",
@@ -352,9 +380,9 @@
       {
         question: "What is Dad's favourite Hobby?",
         options: [
-          { text: "A) Opening the mind and the body one deep breath.", correct: false },
-          { text: "B) Cleansing the stomach one samosa and one mirchi chip at a time.", correct: false },
-          { text: "C) Both of the options but at the same time, you need to eat in order to think.", correct: true }
+          { text: "A) Cleansing the stomach one deep breath and mirchi chip at a time.", correct: false },
+          { text: "B) Helping humanity by passing information about others to them (gossiping).", correct: false },
+          { text: "C) Both of the options but at the same time.", correct: true }
         ]
       },
       {
@@ -368,8 +396,11 @@
     ];
 
     let questionDeck = [];
+    let score = 0;
+    let questionsAnswered = 0;
+    const TOTAL_QUESTIONS = quizDataset.length;
 
-    // Helper function to shuffle an array (Fisher-Yates Algorithm)
+    // Helper function to shuffle array
     function shuffleArray(array) {
       let shuffled = [...array];
       for (let i = shuffled.length - 1; i > 0; i--) {
@@ -379,19 +410,30 @@
       return shuffled;
     }
 
+    function resetQuizState() {
+      score = 0;
+      questionsAnswered = 0;
+      questionDeck = shuffleArray(quizDataset);
+      loadNextQuestion();
+    }
+
     function loadNextQuestion() {
+      // Check if all 5 questions have been completed
+      if (questionsAnswered >= TOTAL_QUESTIONS) {
+        showFinalResults();
+        return;
+      }
+
       const feedback = document.getElementById('quiz-feedback');
       feedback.innerText = '';
 
-      // If deck is empty, refill it with a newly shuffled set of 5 questions
-      if (questionDeck.length === 0) {
-        questionDeck = shuffleArray(quizDataset);
-      }
+      const nextBtn = document.getElementById('next-btn');
+      nextBtn.style.display = 'none'; // Hide next button until answer is chosen
 
       // Pop the next question out of the deck
       const qData = questionDeck.pop();
 
-      document.getElementById('quiz-question').innerText = qData.question;
+      document.getElementById('quiz-question').innerText = `Question ${questionsAnswered + 1} of ${TOTAL_QUESTIONS}: \n${qData.question}`;
 
       const container = document.getElementById('quiz-options-container');
       container.innerHTML = '';
@@ -406,19 +448,59 @@
     }
 
     function checkQuiz(isCorrect) {
+      questionsAnswered++;
       const feedback = document.getElementById('quiz-feedback');
+      
+      // Disable all option buttons so user cannot re-select
+      const optionBtns = document.querySelectorAll('.quiz-btn');
+      optionBtns.forEach(btn => btn.disabled = true);
+
       if (isCorrect) {
+        score++;
         feedback.style.color = '#00ff88';
-        feedback.innerText = '🎯 Sahi Jawab! Saat Crore 💵💰💵!!!!';
+        feedback.innerText = '🎯 Sahi Jawab! Waise bhi hum kabhi galat hue hai😏';
         fireConfetti();
       } else {
         feedback.style.color = '#ff4444';
         feedback.innerText = '❌ Dad always says: "Pehle dhyan se suno!". Wise words from a wise Owl';
       }
+
+      const nextBtn = document.getElementById('next-btn');
+      nextBtn.innerText = (questionsAnswered === TOTAL_QUESTIONS) ? 'See Final Score 🏆' : 'Next Question 🎲';
+      nextBtn.style.display = 'inline-block';
     }
 
-    // Initialize first question on load
-    loadNextQuestion();
+    function showFinalResults() {
+      const quizCard = document.getElementById('quiz-card');
+
+      // Select GIF based on performance
+      let resultGif = '';
+      let resultMessage = '';
+
+      if (score === 5) {
+        resultGif = 'https://media1.tenor.com/m/_BryLP-mnTIAAAAC/stellifymedia-wwtbam.gif';
+        resultMessage = '🏆 PERFECT SCORE! SAAT CRORE!!!!';
+        fireConfetti();
+      } else if (score >= 3) {
+        resultGif = 'https://media1.tenor.com/m/QezU5zaOMQYAAAAC/gajab-mazza-aagya.gif';
+        resultMessage = '👏 Great Job! True Pandey Ji ke Fan!';
+      } else {
+        resultGif = 'https://media1.tenor.com/m/pVku7Ivp5vcAAAAd/rajpal-yadav-rajpal-yadav-comedy.gif';
+        resultMessage = '😅 Opps! BUt hey, concluded ki Dhyan se sunte nahi ho"';
+      }
+
+      quizCard.innerHTML = `
+        <div class="result-box">
+          <div class="score-title">${resultMessage}</div>
+          <p style="font-size: 1.3rem; font-weight: 700;">Final Score: <span style="color: var(--gold);">${score} / ${TOTAL_QUESTIONS}</span></p>
+          <img class="score-gif" src="${resultGif}" alt="Quiz Result GIF">
+          <button class="next-quiz-btn" onclick="location.reload()">Play Again 🔄</button>
+        </div>
+      `;
+    }
+
+    // Initialize Quiz on load
+    resetQuizState();
 
     // Confetti Animation Effect
     function fireConfetti() {
