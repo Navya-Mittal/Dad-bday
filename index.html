@@ -238,7 +238,7 @@
 </head>
 <body>
 
-  <!-- Audio Elements (6 Catchphrases + 1 BGM) -->
+  <!-- Audio Elements -->
   <audio id="bg-audio" loop><source src="audio/king-theme.mp3" type="audio/mpeg"></audio>
   <audio id="sound-1" src="audio/line-shuru.mp3"></audio>
   <audio id="sound-2" src="audio/principal.mp3"></audio>
@@ -246,6 +246,9 @@
   <audio id="sound-4" src="audio/guruji.mp3"></audio>
   <audio id="sound-5" src="audio/commitment.mp3"></audio>
   <audio id="sound-6" src="audio/paaji.mp3"></audio>
+  
+  <!-- Final Score Audio Element -->
+  <audio id="final-score-audio" src=""></audio>
 
   <!-- Hero Header -->
   <header>
@@ -254,7 +257,7 @@
     <button class="bg-music-btn" onclick="toggleBGM()">▶ Play Hero Theme Music 🦁</button>
   </header>
 
-  <!-- Soundboard & GIF Section (6 Boxes) -->
+  <!-- Soundboard & GIF Section -->
   <section>
     <h2 class="section-title">Dad Catchphrase Soundboard 🎙️</h2>
     <div class="card">
@@ -330,7 +333,7 @@
 
     // --- Catchphrase Sound + GIF Logic ---
     function playCatchphrase(audioId, gifUrl, captionText) {
-      ['sound-1', 'sound-2', 'sound-3', 'sound-4', 'sound-5', 'sound-6'].forEach(id => {
+      ['sound-1', 'sound-2', 'sound-3', 'sound-4', 'sound-5', 'sound-6', 'final-score-audio'].forEach(id => {
         const sound = document.getElementById(id);
         if (sound) {
           sound.pause();
@@ -351,7 +354,7 @@
       gifCaption.innerText = captionText;
     }
 
-    // --- DYNAMIC QUIZ LOGIC WITH SCORE & END STATE ---
+    // --- QUIZ LOGIC ---
     const quizDataset = [
       {
         question: "When Dad says: 'Maine gusse mein kahan bola...', what is the standard reply?",
@@ -400,7 +403,6 @@
     let questionsAnswered = 0;
     const TOTAL_QUESTIONS = quizDataset.length;
 
-    // Helper function to shuffle array
     function shuffleArray(array) {
       let shuffled = [...array];
       for (let i = shuffled.length - 1; i > 0; i--) {
@@ -418,7 +420,6 @@
     }
 
     function loadNextQuestion() {
-      // Check if all 5 questions have been completed
       if (questionsAnswered >= TOTAL_QUESTIONS) {
         showFinalResults();
         return;
@@ -428,9 +429,8 @@
       feedback.innerText = '';
 
       const nextBtn = document.getElementById('next-btn');
-      nextBtn.style.display = 'none'; // Hide next button until answer is chosen
+      nextBtn.style.display = 'none';
 
-      // Pop the next question out of the deck
       const qData = questionDeck.pop();
 
       document.getElementById('quiz-question').innerText = `Question ${questionsAnswered + 1} of ${TOTAL_QUESTIONS}: \n${qData.question}`;
@@ -451,7 +451,6 @@
       questionsAnswered++;
       const feedback = document.getElementById('quiz-feedback');
       
-      // Disable all option buttons so user cannot re-select
       const optionBtns = document.querySelectorAll('.quiz-btn');
       optionBtns.forEach(btn => btn.disabled = true);
 
@@ -473,20 +472,43 @@
     function showFinalResults() {
       const quizCard = document.getElementById('quiz-card');
 
-      // Select GIF based on performance
       let resultGif = '';
       let resultMessage = '';
+      let selectedAudioFile = '';
 
+      // --- AUDIO & RESULT SELECTION BASED ON SCORE ---
       if (score === 5) {
+        // Perfect Score: KBC Theme Music
         resultGif = 'https://media1.tenor.com/m/_BryLP-mnTIAAAAC/stellifymedia-wwtbam.gif';
         resultMessage = '🏆 PERFECT SCORE! SAAT CRORE!!!!';
+        selectedAudioFile = 'audio/kbc-theme.mp3'; 
         fireConfetti();
       } else if (score >= 3) {
+        // Good Score
         resultGif = 'https://media1.tenor.com/m/QezU5zaOMQYAAAAC/gajab-mazza-aagya.gif';
         resultMessage = '👏 Great Job! True Pandey Ji ke Fan!';
+        selectedAudioFile = 'audio/good-job.mp3'; 
       } else {
+        // Low Score (2/5, 1/5, 0/5): Dialogue Audio
         resultGif = 'https://media1.tenor.com/m/pVku7Ivp5vcAAAAd/rajpal-yadav-rajpal-yadav-comedy.gif';
         resultMessage = '😅 Opps! But hey, concluded ki Dhyan se sunte nahi ho"';
+        selectedAudioFile = 'audio/dad-dialogue.mp3'; 
+      }
+
+      // Stop any existing soundboard audio playing
+      ['sound-1', 'sound-2', 'sound-3', 'sound-4', 'sound-5', 'sound-6'].forEach(id => {
+        const sound = document.getElementById(id);
+        if (sound) {
+          sound.pause();
+          sound.currentTime = 0;
+        }
+      });
+
+      // Play the selected final score audio
+      const finalAudio = document.getElementById('final-score-audio');
+      if (finalAudio && selectedAudioFile) {
+        finalAudio.src = selectedAudioFile;
+        finalAudio.play().catch(err => console.log('Audio playback prevented by browser:', err));
       }
 
       quizCard.innerHTML = `
@@ -499,10 +521,8 @@
       `;
     }
 
-    // Initialize Quiz on load
     resetQuizState();
 
-    // Confetti Animation Effect
     function fireConfetti() {
       if (typeof confetti === 'function') {
         confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
